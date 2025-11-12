@@ -38,6 +38,35 @@ export default function Materials() {
     return null;
   }
 
+  async function handleCreateConstruction() {
+    try {
+      const stored = JSON.parse(localStorage.getItem("novaObra"));
+      if (!stored) {
+        alert("Nenhuma obra encontrada!");
+        return;
+      }
+
+      const referentialIds = (stored.referentials || []).map((r) =>
+        typeof r === "object" ? r.id : r
+      );
+
+      const payload = {
+        project_name: stored.project_name,
+        location: stored.location,
+        description: stored.description,
+        // referentials: referentialIds,
+      };
+
+      await api.post("/constructions/", payload);
+
+      alert("Obra criada com sucesso!");
+      localStorage.removeItem("novaObra");
+
+      navigate("/home");
+    } catch (error) {
+      console.error(error);
+    }
+  }
   useEffect(() => {
     async function load() {
       setLoading(true);
@@ -408,12 +437,22 @@ export default function Materials() {
                 Voltar
               </button>
 
-              <button
-                onClick={handleNext}
-                className="bg-red-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700"
-              >
-                Concluir
-              </button>
+              <div className="flex gap-3">
+                {/* ✅ Botão para criar obra */}
+                <button
+                  onClick={handleCreateConstruction}
+                  className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700"
+                >
+                  Criar Obra
+                </button>
+
+                <button
+                  onClick={handleNext}
+                  className="bg-red-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700"
+                >
+                  Concluir
+                </button>
+              </div>
             </div>
           </>
         )}
