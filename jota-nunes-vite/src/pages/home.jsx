@@ -290,7 +290,9 @@ export default function Home() {
               Observações — {projetoSelecionado.project_name}
             </h3>
             <textarea
-              value={textoObs}
+              value={projetoSelecionado.observations
+                ?.map((obs) => obs.description)
+                .join("\n")}
               onChange={(e) => setTextoObs(e.target.value)}
               placeholder="Digite aqui as observações sobre o projeto..."
               className="w-full h-40 border border-gray-300 rounded-lg p-3 text-gray-800 resize-none focus:ring-2 focus:ring-red-600 outline-none"
